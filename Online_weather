@@ -83,23 +83,20 @@ def timespand_option(x_valu, y_valu):
     dates_x = [dts.date2num(item) for item in datetime_x]
     return dates_x, y_valu_r
 
-
-def creating_graf(dates_x, value_list):
+def creating_graf(dates_x, attrebute_list_1, attrebute_list_2, attrebute_list_3, attrebute_list_4):
     # Creats a graf
     start_date = dates_x[0]
-    dates_x_list = dates_x[:]
-    stop_date = dates_x_list.pop()
-    start_date = dts.num2date(start_date)
-    start_date = start_date[0]
-    stop_date = dts.num2date(stop_date)
-    stop_date = stop_date[0]
+    end_date = dates_x[-1]
+    # om det inte är inmatat på fomern eller om fel datum (ex 28 feb)
+    start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+    diff = end_date - start_date
+    days = diff.total_seconds()/86400  # (3600*24)
+    print(days)
     fig, ax = plt.subplots()
     ax.set_title("Temperatur i Karlskrona")
     ax.set_ylabel("Temperatur,celcius")
-    if float(stop_date.strftime("%Y") +
-             stop_date.strftime("%m")+stop_date.strftime("%d"))-float(start_date.strftime("%Y") +
-                                                                      start_date.strftime("%m") +
-                                                                      start_date.strftime("%d")) > 20000:
+    if days > 365*2 or days == 0:
         ax.set_xlabel("Year")
         months = dts.MonthLocator()
         years_markers = dts.YearLocator()
@@ -107,29 +104,30 @@ def creating_graf(dates_x, value_list):
         years_format = dts.DateFormatter('%Y')
         ax.xaxis.set_major_formatter(years_format)
         ax.xaxis.set_minor_locator(months)
-        ax.plot(dates_x, value_list, color='g')
+        ax.plot(dates_x, attrebute_list_1, color='g')
+        ax.plot(dates_x, attrebute_list_2, color='c')
+        ax.plot(dates_x, attrebute_list_3, color='m')
+        ax.plot(dates_x, attrebute_list_4, color='r')
         plt.show()
 
-    elif float(stop_date.strftime("%Y")+stop_date.strftime("%m")
-               + stop_date.strftime("%d"))-float(start_date.strftime("%Y") +
-                                                 start_date.strftime("%m") +
-                                                 start_date.strftime("%d")) and \
-            float(stop_date.strftime("%Y")+stop_date.strftime("%m") +
-                  stop_date.strftime("%d"))-float(start_date.strftime("%Y")+start_date.strftime("%m") +
-                                                  start_date.strftime("%d")) >= 14:
+    elif days < 14:
         ax.set_xlabel("Month")
         months_markers = dts.MonthLocator()
         ax.xaxis.set_major_locator(months_markers)
         months_format = dts.DateFormatter('%m')
         ax.xaxis.set_major_formatter(months_format)
 
-    elif float(stop_date.strftime("%d"))-float(start_date.strftime("%d")) < 14:
+    elif days < 365*2:
+        print(dates_x)
         ax.set_xlabel("Day")
         day_marker = dts.DayLocator()
         ax.xaxis.set_major_locator(day_marker)
         day_format = dts.DateFormatter('%d')
         ax.xaxis.set_major_formatter(day_format)
-    ax.plot(dates_x, value_list, color='g')
+        ax.plot(dates_x, attrebute_list_1, color='g')
+        ax.plot(dates_x, attrebute_list_2, color='c')
+        ax.plot(dates_x, attrebute_list_3, color='m')
+        ax.plot(dates_x, attrebute_list_4, color='r')
     plt.show()
 
 
