@@ -1,25 +1,16 @@
-# PA1450
-### Project for the course PA1450 - Software Development at BTH, Sweden
+# PA1450 - Group 2
+### Project: Development Task 
 ***
 
-## Quick Start
+## Online Weather
 
-You're currently viewing the branch `master`. This branch contains documentation for the rest of the repository's branches.
+`Online Weather` is a program developed to provide an overview of several weather conditions in a given location. By selecting attributes of interest, the user can view and interact with the data through generated graphs. The user can also choose to view the data for attributes of interest over a specific time interval. Either by selecting both start date and end date for the interval or by choosing a specific year, month, day or hour to view in the graph. In this version of the program Online Weather the developers focused on the objectives listed above, but of course the program got potential for further development.  
 
-### Virtual Lab Environment
+### Instructions 
 
-The branch `virtual-lab-environment` contains detailed instructions for setting up a virtual lab environment fit for the purpose of developing Python software.
+In this version of Online Weather the developers focused on the objectives listed above. The user should be able to choose attributes of interest to view through a generated graph, choose a time intervall, view graph or end the program. These objectives will be displayed in a `start meny` when the user starts the program. After the user have picked one of the four alternatives the chosen alternative will be shown and the start meny will be available again. The user can then pick another alternative or quit the program. Once the user wants to quit the program the last alternative of the four will be picked and the program will then end.
 
-### Skeleton
+### Developers
 
-The branch `skeleton` contains a skeleton Python 3 application for use with a CLI. It features example commands and an example Flask application.
+Edvin Kristiansson, Mohammad Mohammed, Mahdi Yaqubi, Emma von Rosen and Wilma Jonasson.
 
-## Course set-up
-
-_Taken from the internal course page._
-
-The course is organized around several lectures / discussions to introduce the foundations and development models, project meetings and workshops to organise the two project planning, management and execution activities as well. The project planning, management and execution activities will consist in the requirements elicitation and documentation, planning and execution of a software project. This will be carried out twice, following a "traditional" software development model and an agile development process.
-
-These project planning, management and execution activities have the purpose of letting the students try the theory studied as well as gaining some understanding regarding the adoption of the development models and techniques in practical contexts.
-
-Finally, in the context of the second project planning, management and execution activity a small software development task will be carried out, in which the students, organised in groups of 3 or 4 members will develop a small piece of software to be integrated into a bigger software system.
