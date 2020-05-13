@@ -3,28 +3,28 @@ import matplotlib.dates as dts
 import datetime
 
 
-def place_file_list(name):
+def place_file_list(name, dic):
     # Opens a file and puts it in two list and output a list
     # name = choosen_fil()
+    lista = []
     with open(name, "r") as f:
-        f.readline()
-        date_list = []
-        value_list = []
-        for line in f:
-            date = line[:10]
-            value = line[11:14]
-            value = float(value)
-            date_list.append(date)
-            value_list.append(value)
-    return date_list, value_list
-
-def instanser_dateime(date_list):
-    # converts str date to instanser date
-    date_instanser_list = []
-    for date in date_list:
-        instanser_date = [datetime.datetime.strptime(date, '%Y-%m-%d')]
-        date_instanser_list.append(instanser_date)
-    return date_instanser_list
+        if dic == {}:
+            for line in f:
+                date_time = line[:10]+line[11:13]
+                value = line[20:23]
+                value = float(value)
+                lista = [value]
+                dic[date_time] = lista
+        else:
+            for line in f:
+                date_time = line[:10]+line[11:13]
+                value = line[20:23]
+                value = float(value)
+                try:
+                    dic[date_time].append(value)
+                except:
+                    next
+    return dic
 
 
 def options():
@@ -34,69 +34,72 @@ def options():
                 \n(3) Visa graf" + "\n(4) Avsluta programmet" + "\nDitt val: ")
     return val
 
-def choosen_file():
 
-    num = int(input("\nVilken fil vill du läsa in?\n1. Temperatur per dag.txt\n2. Soltimmar.txt\n3. Nederbörd.txt\n4. Vind.txt\nVal: "))
-    while 0<num <=4:
+def choosen_file(dic):
+
+    num = int(input(
+        "\nVilken fil vill du läsa in?\n1. Lufttemperatur\n2. Solskenstid\n3. Nederbörd\n4. Vind\nVal: "))
+    while 0 < num <= 4:
         if num == 1:
-            infile = "Temperatur per dag.txt"
+            infile = "Online_weather\\LuftTemp.txt"
+
         elif num == 2:
-            infile = "Soltimmar.txt"
-    
+
+            infile = "Online_weather\\Solskenstid.txt"
+
         elif num == 3:
-            infile = "Nederbörd.txt"
-        
+            infile = "Online_weather\\Nederbord_timmar.txt"
+
         elif num == 4:
-            infile = "vind.txt"
-            
-        (date_list, value_list) = place_file_list(infile)
-        datetime_x = instanser_dateime(date_list)
-        dates_x = [dts.date2num(item) for item in datetime_x]
+            infile = "Online_weather\\Vind_hastighet.txt"
 
-        return dates_x, value_list, date_list
+        dic = place_file_list(infile, dic)
+
+        return dic
 
 
-def timespand_option(x_valu, y_valu):
+def timespand_option(dic):
     # Lets the user input a timespand
     timespand = "NOT"
-    zip_objekt = zip(x_valu, y_valu)
-    dictionary = dict(zip_objekt)
     while timespand == "NOT":
         timespand_start = input(
             "\nSkriv in datumet du vill att grafen ska starta på YYYY-MM-DD: ")
         timespand_stop = input(
             "\nSkriv in datumet du vill att grafen sluta på YYYY-MM-DD: ")
-        tst = timespand_start
-        tsp = timespand_stop
+        tst = timespand_start+"00"
+        tsp = timespand_stop+"00"
         if float(tst[:4]+tst[5:7]+tst[8:10]) > float(tsp[:4]+tsp[5:7]+tsp[8:10]):
             print(
                 f"\nDitt startdatum: {tst} måste vara tidnigare än ditt stopp datum: {tsp}")
         else:
             timespand = "OK"
-    x_valu_r = []
-    y_valu_r = []
-    for date in dictionary:
-        if date > timespand_start and date < timespand_stop:
-            x_valu_r.append(date)
-            y_valu_r.append(dictionary[date])
-    datetime_x = instanser_dateime(x_valu_r)
-    dates_x = [dts.date2num(item) for item in datetime_x]
-    return dates_x, y_valu_r
+    dic_2 = {}
+    for date_time in dic:
+        if date_time > timespand_start and date_time < timespand_stop:
+            dic_2[date_time] = dic[date_time]
+    return dic_2
 
-def creating_graf(dates_x, attrebute_list_1, attrebute_list_2, attrebute_list_3, attrebute_list_4):
+
+def creating_graf(dic):
     # Creats a graf
-    start_date = dates_x[0]
-    end_date = dates_x[-1]
+    List = []
+    for key in dic.keys():
+        List.append(key)
+    start_element1 = min(List)
+    start_element = str(start_element1)
+    start_element = start_element[:10]
+    end_element = max(List)
+    end_element = str(end_element)
+    end_element = end_element[:10]
     # om det inte är inmatat på fomern eller om fel datum (ex 28 feb)
-    start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+    start_date = datetime.datetime.strptime(start_element, "%Y-%m-%d")
+    end_date = datetime.datetime.strptime(end_element, "%Y-%m-%d")
     diff = end_date - start_date
-    days = diff.total_seconds()/86400  # (3600*24)
-    print(days)
+    days = diff.total_seconds()/86400  # (360024)
     fig, ax = plt.subplots()
-    ax.set_title("Temperatur i Karlskrona")
-    ax.set_ylabel("Temperatur,celcius")
-    if days > 365*2 or days == 0:
+    ax.set_title("Weather in Karlskrona")
+
+    if days > 3652 or days == 0:
         ax.set_xlabel("Year")
         months = dts.MonthLocator()
         years_markers = dts.YearLocator()
@@ -104,76 +107,66 @@ def creating_graf(dates_x, attrebute_list_1, attrebute_list_2, attrebute_list_3,
         years_format = dts.DateFormatter('%Y')
         ax.xaxis.set_major_formatter(years_format)
         ax.xaxis.set_minor_locator(months)
-        ax.plot(dates_x, attrebute_list_1, color='g')
-        ax.plot(dates_x, attrebute_list_2, color='c')
-        ax.plot(dates_x, attrebute_list_3, color='m')
-        ax.plot(dates_x, attrebute_list_4, color='r')
-        plt.show()
 
-    elif days < 14:
+    elif 14 < days < 365*2:
         ax.set_xlabel("Month")
         months_markers = dts.MonthLocator()
         ax.xaxis.set_major_locator(months_markers)
         months_format = dts.DateFormatter('%m')
         ax.xaxis.set_major_formatter(months_format)
 
-    elif days < 365*2:
-        print(dates_x)
+    elif days < 14:
         ax.set_xlabel("Day")
         day_marker = dts.DayLocator()
         ax.xaxis.set_major_locator(day_marker)
-        day_format = dts.DateFormatter('%d')
+        day_format = dts.DateFormatter('%H')
         ax.xaxis.set_major_formatter(day_format)
-        ax.plot(dates_x, attrebute_list_1, color='g')
-        ax.plot(dates_x, attrebute_list_2, color='c')
-        ax.plot(dates_x, attrebute_list_3, color='m')
-        ax.plot(dates_x, attrebute_list_4, color='r')
+    color_list = ['g', 'c', 'm', 'r']
+    for values1 in range(len(dic[start_element1])):
+        x_List = []
+        y_List = []
+        for values in dic:
+            x_value = datetime.datetime.strptime(values, "%Y-%m-%d%H").date()
+            x_List.append(x_value)
+            y_List.append(dic[values][values1])
+        ax.plot(x_List, y_List, color=color_list[values1])
+
     plt.show()
 
 
 def run():
     # Run the program
     stop = "Nej"
+    dic = {}
     while stop == "Nej":
         val = options()
         if val == "1":
-            try:
-                # x_valu, y_valu_s, date_str = file_option()
-                x_valu, y_valu_s, date_str = choosen_file()
-            except FileNotFoundError as error:
-                print("\nError message: ", error)                
-            except:
-                print("Försök igen")
-            try:
-                y_valu = y_valu_s
-            except UnboundLocalError as Uerror:
-                print("Du måste skriva in en txt fil", Uerror)
-                
+            # try:
+            dic = choosen_file(dic)
+            # except FileNotFoundError as error:
+            #     print("\nError message: ", error)
+            # except:
+            #     print("Försök igen")
+
         elif val == "2":
             try:
-                x_valu, y_valu = timespand_option(date_str, y_valu_s)
+                dic = timespand_option(dic)
             except ValueError as error:
                 print(
                     "Tidspandet måste skrivas med siffror i formatet YYYY-MM-DD", error)
             except UnboundLocalError as Un_error:
                 print(
                     "En fil måste först läsas in innan du kan bestämma tidsram", Un_error)
-        
+
         elif val == "3":
-            try:
-                if y_valu == y_valu_s:
-                    y_valu = y_valu_s
-                creating_graf(x_valu, y_valu)
-            except UnboundLocalError as Un_error:
-                print("En fil måste först läsas in innan du kan skapa en graf")
-            except IndexError as in_error:
-                print(f"tidsramen som val är inte acepterar: {in_error}")
-        
+            creating_graf(dic)
+            # except UnboundLocalError as Un_error:
+            #     print("En fil måste först läsas in innan du kan skapa en graf")
+            # except IndexError as in_error:
+            #     print(f"tidsramen som val är inte acepterar: {in_error}")
+
         elif val == "4":
             stop = "Ja"
-        
-        else:
-            print("\nDu har inte skrivit ut ett valbart alternativ försök igen")
 
 
 run()
