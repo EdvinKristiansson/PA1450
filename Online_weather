@@ -19,7 +19,6 @@ def place_file_list(name, dic):
             for line in f:
                 date_time = line[:10]+line[11:13]
                 value = line[20:23]
-                print(value)
                 value = float(value)
                 try:
                     dic[date_time].append(value)
