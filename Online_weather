@@ -19,6 +19,7 @@ def place_file_list(name, dic):
             for line in f:
                 date_time = line[:10]+line[11:13]
                 value = line[20:23]
+                print(value)
                 value = float(value)
                 try:
                     dic[date_time].append(value)
@@ -41,17 +42,17 @@ def choosen_file(dic):
         "\nVilken fil vill du läsa in?\n1. Lufttemperatur\n2. Solskenstid\n3. Nederbörd\n4. Vind\nVal: "))
     while 0 < num <= 4:
         if num == 1:
-            infile = "Online_weather\\LuftTemp.txt"
+            infile = "LuftTemp.txt"
 
         elif num == 2:
 
-            infile = "Online_weather\\Solskenstid.txt"
+            infile = "Solskenstid.txt"
 
         elif num == 3:
-            infile = "Online_weather\\Nederbord_timmar.txt"
+            infile = "Nederbord_timmar.txt"
 
         elif num == 4:
-            infile = "Online_weather\\Vind_hastighet.txt"
+            infile = "Vind_hastighet.txt"
 
         dic = place_file_list(infile, dic)
 
@@ -170,3 +171,4 @@ def run():
 
 
 run()
+
