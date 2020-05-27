@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as dts
 import datetime
+from operator import itemgetter
 
 
 def place_file_list(name, dic):
@@ -121,15 +122,54 @@ def creating_graf(dic):
         ax.xaxis.set_major_locator(day_marker)
         day_format = dts.DateFormatter('%H')
         ax.xaxis.set_major_formatter(day_format)
-    color_list = ['g', 'c', 'm', 'r']
-    for values1 in range(len(dic[start_element1])):
-        x_List = []
-        y_List = []
-        for values in dic:
-            x_value = datetime.datetime.strptime(values, "%Y-%m-%d%H").date()
-            x_List.append(x_value)
-            y_List.append(dic[values][values1])
-        ax.plot(x_List, y_List, color=color_list[values1])
+
+    valu = list(dic.values())
+
+    if len(valu[1]) == 1:
+        x = list(dic.keys())
+        date = [datetime.datetime.strptime(i, "%Y-%m-%d%H").date() for i in x]
+        ax.plot(date, valu, color='g')
+
+    elif len(valu[1]) == 2:
+        dic2 = dic.copy()
+        for element in dic:
+            if len(dic[element]) != 2:
+                del dic2[element]
+        x = list(dic2.keys())
+        date = [datetime.datetime.strptime(i, "%Y-%m-%d%H").date() for i in x]
+        valu_2 = list(dic2.values())
+        y_1, y_2 = map(list, zip(*valu_2))
+        ax.plot(date, y_1, color='g')
+        ax.plot(date, y_2, color='r')
+
+    elif len(valu[1]) == 3:
+        dic2 = dic.copy()
+        for element in dic:
+            if len(dic[element]) != 3:
+                del dic2[element]
+        x = list(dic2.keys())
+        date = [datetime.datetime.strptime(i, "%Y-%m-%d%H").date() for i in x]
+        valu_2 = list(dic2.values())
+        len(valu_2)
+        y_1, y_2, y_3 = map(list, zip(*valu_2))
+        ax.plot(date, y_1, color='g')
+        ax.plot(date, y_2, color='r')
+        ax.plot(date, y_3, color='m')
+
+    elif len(valu[1]) == 4:
+        dic2 = dic.copy()
+        for element in dic:
+            if len(dic[element]) != 4:
+                del dic2[element]
+        x = list(dic2.keys())
+        date = [datetime.datetime.strptime(i, "%Y-%m-%d%H").date() for i in x]
+        valu_2 = list(dic2.values())
+        len(valu_2)
+        y_1, y_2, y_3, y_4 = map(list, zip(*valu_2))
+        ax.plot(date, y_1, color='g')
+        ax.plot(date, y_2, color='r')
+        ax.plot(date, y_3, color='m')
+        ax.plot(date, y_4, color='c')
 
     plt.show()
 
@@ -170,4 +210,3 @@ def run():
 
 
 run()
-
